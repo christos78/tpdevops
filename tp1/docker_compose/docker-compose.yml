@@ -1,0 +1,36 @@
+version: '2.2'
+services:
+ database:
+  container_name: db_postgres11.6-alpine
+  image: christos78p/db_postgres11.6-alpine
+  environment: 
+   - POSTGRES_DB=db
+   - POSTGRES_USER=usr
+   - POSTGRES_PASSWORD=pwd
+  networks:
+   - toto
+  volumes:
+   - /home/vm/data:/var/lib/postgresql/data
+
+ backend:
+  container_name: simple_api_container
+  image: christos78p/simple_api
+  networks:
+   - toto
+  depends_on:
+   - database
+
+ httpd:
+  container_name: http_container
+  image: christos78p/apache_http
+  ports:
+   - "80:80"
+  networks:
+   - toto
+  depends_on:
+   - backend
+
+networks:
+ toto: 
+  driver: bridge
+
